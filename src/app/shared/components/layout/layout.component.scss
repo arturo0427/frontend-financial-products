@@ -1,0 +1,35 @@
+.shell {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.content {
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 16px 12px;
+  }
+
+  .header {
+    height: 56px;
+  }
+}
