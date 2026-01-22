@@ -1,1 +1,21 @@
-<p>product-create works!</p>
+<section class="page">
+  <header class="page__header">
+    <h1 class="title">Registrar producto</h1>
+
+    <button class="btn btn--ghost" type="button" (click)="cancel()">
+      Volver
+    </button>
+  </header>
+
+  <app-product-form
+    [form]="form"
+    [isSaving]="isSaving()"
+    [canSubmit]="canSubmit()"
+    [error]="error()"
+    submitLabel="Agregar"
+    (submitForm)="submit()"
+    (resetForm)="reset()"
+  ></app-product-form>
+</section>
+
+

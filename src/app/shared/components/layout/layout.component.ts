@@ -8,3 +8,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './layout.component.scss',
 })
 export class LayoutComponent {}
+
+

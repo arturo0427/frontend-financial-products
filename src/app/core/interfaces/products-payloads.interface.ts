@@ -14,3 +14,5 @@ export interface UpdateFinancialProductPayload {
   date_release: string;
   date_revision: string;
 }
+
+

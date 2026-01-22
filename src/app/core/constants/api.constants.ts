@@ -7,3 +7,5 @@ export const API = {
     `/bp/products/verification/${encodeURIComponent(id)}`,
   productById: (id: string) => `/bp/products/${encodeURIComponent(id)}`,
 } as const;
+
+

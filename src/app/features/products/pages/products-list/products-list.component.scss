@@ -103,7 +103,7 @@
   background: #f9fafb;
 }
 
-/* Estados */
+
 .state {
   padding: 18px;
   border-radius: 10px;
@@ -130,7 +130,7 @@
   margin-bottom: 6px;
 }
 
-/* Footer (paginación visual) */
+
 .table__footer {
   margin-top: 12px;
   padding-top: 12px;
@@ -150,7 +150,7 @@
   max-width: 140px;
 }
 
-/* Responsive footer */
+
 @media (max-width: 600px) {
   .table__footer {
     flex-direction: column;
@@ -161,3 +161,5 @@
     max-width: 100%;
   }
 }
+
+

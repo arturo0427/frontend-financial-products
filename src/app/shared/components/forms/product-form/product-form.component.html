@@ -1,0 +1,148 @@
+<div class="card">
+  @if (error) {
+    <div class="state state--error">
+      <div class="state__title">Error</div>
+      <div class="state__message">{{ error.message }}</div>
+    </div>
+  }
+
+  <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid">
+      <div class="field">
+        <label class="label" for="id">ID</label>
+        <input id="id" class="input" type="text" formControlName="id" />
+        @if (form.controls["id"].touched && form.controls["id"].invalid) {
+          <div class="error">
+            @if (form.controls["id"].errors?.["required"]) {
+              El ID es requerido.
+            } @else if (form.controls["id"].errors?.["minlength"]) {
+              Mínimo 3 caracteres.
+            } @else if (form.controls["id"].errors?.["maxlength"]) {
+              Máximo 10 caracteres.
+            } @else if (form.controls["id"].errors?.["idTaken"]) {
+              Este ID ya existe.
+            }
+          </div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label" for="name">Nombre</label>
+        <input id="name" class="input" type="text" formControlName="name" />
+        @if (form.controls["name"].touched && form.controls["name"].invalid) {
+          <div class="error">
+            @if (form.controls["name"].errors?.["required"]) {
+              El nombre es requerido.
+            } @else if (form.controls["name"].errors?.["minlength"]) {
+              Mínimo 5 caracteres.
+            } @else if (form.controls["name"].errors?.["maxlength"]) {
+              Máximo 100 caracteres.
+            }
+          </div>
+        }
+      </div>
+
+      <div class="field field--full">
+        <label class="label" for="description">Descripción</label>
+        <textarea
+          id="description"
+          class="textarea"
+          rows="3"
+          formControlName="description"
+        ></textarea>
+        @if (
+          form.controls["description"].touched &&
+          form.controls["description"].invalid
+        ) {
+          <div class="error">
+            @if (form.controls["description"].errors?.["required"]) {
+              La descripción es requerida.
+            } @else if (form.controls["description"].errors?.["minlength"]) {
+              Mínimo 10 caracteres.
+            } @else if (form.controls["description"].errors?.["maxlength"]) {
+              Máximo 200 caracteres.
+            }
+          </div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label" for="logo">Logo (URL)</label>
+        <input id="logo" class="input" type="text" formControlName="logo" />
+        @if (form.controls["logo"].touched && form.controls["logo"].invalid) {
+          <div class="error">El logo es requerido.</div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label" for="date_release">Fecha de liberación</label>
+        <input
+          id="date_release"
+          class="input"
+          type="date"
+          formControlName="date_release"
+        />
+        @if (
+          form.controls["date_release"].touched &&
+          form.controls["date_release"].invalid
+        ) {
+          <div class="error">
+            @if (form.controls["date_release"].errors?.["required"]) {
+              La fecha es requerida.
+            } @else if (form.controls["date_release"].errors?.["dateInPast"]) {
+              No puede ser menor a hoy.
+            }
+          </div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label" for="date_revision"
+          >Fecha de reestructuración</label
+        >
+        <input
+          id="date_revision"
+          class="input"
+          type="date"
+          formControlName="date_revision"
+          readonly
+        />
+        @if (
+          form.controls["date_revision"].touched &&
+          form.controls["date_revision"].invalid
+        ) {
+          <div class="error">
+            @if (form.controls["date_revision"].errors?.["required"]) {
+              La fecha es requerida.
+            } @else if (
+              form.controls["date_revision"].errors?.["notOneYearAfter"]
+            ) {
+              Debe ser exactamente un año después.
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="actions">
+      <button
+        class="btn btn--ghost"
+        type="button"
+        (click)="onReset()"
+        [disabled]="isSaving"
+      >
+        Reiniciar
+      </button>
+
+      <button class="btn btn--primary" type="submit" [disabled]="!canSubmit">
+        @if (isSaving) {
+          {{ savingLabel }}
+        } @else {
+          {{ submitLabel }}
+        }
+      </button>
+    </div>
+  </form>
+</div>
+
+

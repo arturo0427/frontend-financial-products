@@ -1,10 +1,10 @@
-/* Contenedor tabla */
+
 .table {
   display: grid;
   gap: 8px;
 }
 
-/* Header y filas */
+
 .table__head,
 .table__row {
   display: grid;
@@ -13,20 +13,20 @@
   align-items: center;
 }
 
-/* Header */
+
 .table__head {
   font-size: 12px;
   color: #6b7280;
   font-weight: 700;
 }
 
-/* Fila */
+
 .table__row {
   padding: 10px 0;
   border-top: 1px solid #eef2f7;
 }
 
-/* Acciones */
+
 .table__actions {
   text-align: right;
 }
@@ -130,7 +130,7 @@
   border: 0;
 }
 
-/* Logo */
+
 .logo {
   width: 56px;
   height: 34px;
@@ -143,7 +143,7 @@
   align-items: center;
 }
 
-/* Icono info */
+
 .info-icon {
   width: 14px;
   height: 14px;
@@ -157,7 +157,7 @@
   opacity: 1;
 }
 
-/* Texto */
+
 .mono {
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
@@ -181,11 +181,11 @@
   -webkit-box-orient: vertical;
 }
 
-/* ===================== */
-/* RESPONSIVE */
-/* ===================== */
 
-/* Fallback horizontal */
+
+
+
+
 :host {
   display: block;
   overflow-x: auto;
@@ -196,7 +196,7 @@
   min-width: 860px;
 }
 
-/* Móvil: tarjetas */
+
 @media (max-width: 900px) {
   .table__head {
     display: none;
@@ -225,3 +225,5 @@
     -webkit-line-clamp: 3;
   }
 }
+
+

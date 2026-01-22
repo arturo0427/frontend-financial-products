@@ -1,0 +1,164 @@
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  outline: none;
+  background: #fff;
+  color: #111827;
+  transition:
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.input {
+  height: 42px;
+}
+
+.textarea {
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 92px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.input:hover,
+.textarea:hover {
+  border-color: #cbd5e1;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.error {
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.state {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.state--error {
+  border-style: solid;
+  border-color: #fecaca;
+  background: #fff1f2;
+}
+
+.state__title {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 800;
+  background: #f3f4f6;
+  color: #111827;
+  transition:
+    transform 80ms ease,
+    filter 140ms ease,
+    background 140ms ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn--primary:hover {
+  filter: brightness(0.97);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: #d1d5db;
+}
+
+.btn--ghost:hover {
+  background: #f9fafb;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+

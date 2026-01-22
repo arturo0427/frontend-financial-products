@@ -29,3 +29,5 @@ export class ConfirmDeleteModalComponent {
     this.confirm.emit();
   }
 }
+
+

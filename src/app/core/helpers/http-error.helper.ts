@@ -23,3 +23,5 @@ export function mapHttpErrorToUi(error: unknown): UiHttpError {
 
   return fallback;
 }
+
+
