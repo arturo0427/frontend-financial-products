@@ -1,59 +1,37 @@
 # FrontProducts
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.5.
+Aplicacion Angular para gestionar productos financieros.
 
-## Development server
+## Requisitos
 
-To start a local development server, run:
+- Node.js (recomendado LTS)
+- npm (incluido con Node)
+- Angular CLI 19.x
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Instalacion
 
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Ejecutar en desarrollo (con proxy)
+
+Por CORS del backend se usa proxy.
 
 ```bash
-ng generate --help
+ng serve --proxy-config proxy.conf.json
 ```
 
-## Building
+Abre `http://localhost:4200/`.
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Ejecutar pruebas unitarias
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Build
 
 ```bash
-ng e2e
+ng build
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
