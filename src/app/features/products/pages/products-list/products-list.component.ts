@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { UiHttpError } from '../../../../core/interfaces/http-error.interface';
-import { FinancialProduct } from '../../../../core/interfaces/financial-product.interface';
-import { ProductsService } from '../../../../core/services/products.service';
 import { mapHttpErrorToUi } from '../../../../core/helpers/http-error.helper';
+import { FinancialProduct } from '../../../../core/interfaces/financial-product.interface';
+import { UiHttpError } from '../../../../core/interfaces/http-error.interface';
+import { ProductsService } from '../../../../core/services/products.service';
+import { TableComponent } from '../../../../shared/components/table/table.component';
 
 type PageSizeOption = 5 | 10 | 20;
 
 @Component({
   selector: 'app-products-list',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TableComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss',
 })
@@ -18,18 +19,14 @@ export class ProductsListComponent {
   private readonly _productsService = inject(ProductsService);
   private readonly _router = inject(Router);
 
-  // UI state
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<UiHttpError | null>(null);
 
-  // data
   readonly products = signal<FinancialProduct[]>([]);
 
-  // filters
   readonly searchTerm = signal<string>('');
-  readonly pageSize = signal<PageSizeOption>(10);
+  readonly pageSize = signal<PageSizeOption>(5);
 
-  // derived
   readonly filteredProducts = computed<FinancialProduct[]>(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const items = this.products();
@@ -46,7 +43,6 @@ export class ProductsListComponent {
     return this.filteredProducts().slice(0, this.pageSize());
   });
 
-  readonly resultCount = computed<number>(() => this.visibleProducts().length);
   readonly totalFilteredCount = computed<number>(
     () => this.filteredProducts().length,
   );
@@ -86,12 +82,13 @@ export class ProductsListComponent {
     this._router.navigate(['/products/new']);
   }
 
-  // placeholders para F5/F6 (luego se conectan al dropdown/modal)
   onEdit(productId: string): void {
     this._router.navigate(['/products', productId, 'edit']);
   }
 
-  onDelete(_productId: string): void {
+  onDelete(productId: string): void {
     // aquí irá el modal D4
+    // por ahora dejamos el hook preparado
+    console.log('delete', productId);
   }
 }

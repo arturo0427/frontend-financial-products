@@ -1,1 +1,63 @@
-<p>table works!</p>
+<div class="table">
+  <div class="table__head">
+    <div>Logo</div>
+    <div>Nombre de producto</div>
+    <div class="th-with-icon">
+      Descripción
+      <img
+        src="assets/icons/info-circle.svg"
+        alt="Información"
+        class="info-icon"
+        title="Información adicional"
+      />
+    </div>
+    <div class="th-with-icon">
+      Fecha de liberación
+      <img
+        class="info-icon"
+        src="assets/icons/info-circle.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </div>
+    <div class="th-with-icon">
+      Fecha de reestructuración
+      <img
+        class="info-icon"
+        src="assets/icons/info-circle.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </div>
+    <div class="table__actions">Acciones</div>
+  </div>
+
+  @for (item of items; track item.id) {
+    <div class="table__row">
+      <div>
+        <img
+          class="logo"
+          [src]="item.logo ? item.logo : 'assets/images/200x200.png'"
+          [alt]="item.name"
+        />
+      </div>
+      <div class="strong">{{ item.name }}</div>
+      <div class="muted clamp">{{ item.description }}</div>
+      <div class="mono">{{ item.date_release }}</div>
+      <div class="mono">{{ item.date_revision }}</div>
+
+      <div class="actions">
+        <button class="btn btn--link" type="button" (click)="onEdit(item.id)">
+          Editar
+        </button>
+        <button
+          class="btn btn--link danger"
+          type="button"
+          (click)="onRemove(item.id)"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  }
+</div>

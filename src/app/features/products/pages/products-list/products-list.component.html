@@ -10,7 +10,6 @@
   <div class="card">
     <div class="toolbar">
       <div class="field">
-        <label class="label" for="search">Buscar</label>
         <input
           id="search"
           class="input"
@@ -37,73 +36,11 @@
       @if (visibleProducts().length === 0) {
         <div class="state">No se encontraron resultados.</div>
       } @else {
-        <div class="table">
-          <div class="table__head">
-            <div>Logo</div>
-            <div>Nombre de producto</div>
-            <div>
-              Descripcion
-              <img
-                src="assets/icons/info-circle.svg"
-                alt="Información"
-                class="info-icon"
-                title="Información adicional"
-              />
-            </div>
-            <div>
-              Fecha de liberacion
-              <img
-                class="info-icon"
-                src="assets/icons/info-circle.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </div>
-            <div>
-              Fecha de reestructuracion
-              <img
-                class="info-icon"
-                src="assets/icons/info-circle.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </div>
-            <div class="table__actions">Acciones</div>
-          </div>
-
-          @for (p of visibleProducts(); track p.id) {
-            <div class="table__row">
-              <div>
-                <img
-                  class="logo"
-                  [src]="p.logo ? p.logo : 'assets/images/200x200.png'"
-                  [alt]="p.name"
-                />
-              </div>
-              <div class="strong">{{ p.name }}</div>
-              <div class="muted clamp">{{ p.description }}</div>
-
-              <div class="mono">{{ p.date_release }}</div>
-              <div class="mono">{{ p.date_revision }}</div>
-              <div class="actions">
-                <button
-                  class="btn btn--link"
-                  type="button"
-                  (click)="onEdit(p.id)"
-                >
-                  Editar
-                </button>
-                <button
-                  class="btn btn--link danger"
-                  type="button"
-                  (click)="onDelete(p.id)"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          }
-        </div>
+        <app-table
+          [items]="visibleProducts()"
+          (edit)="onEdit($event)"
+          (remove)="onDelete($event)"
+        />
 
         <div class="table__footer">
           <div class="results">{{ totalFilteredCount() }} Resultados</div>
