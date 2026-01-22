@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { mapHttpErrorToUi } from '../../../../core/helpers/http-error.helper';
 import { FinancialProduct } from '../../../../core/interfaces/financial-product.interface';
@@ -35,6 +42,7 @@ export class ProductsListComponent implements OnInit {
 
   readonly searchTerm = signal<string>('');
   readonly pageSize = signal<PageSizeOption>(5);
+  readonly currentPage = signal<number>(1);
 
   readonly filteredProducts = computed<FinancialProduct[]>(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -48,8 +56,15 @@ export class ProductsListComponent implements OnInit {
     });
   });
 
+  readonly totalPages = computed<number>(() => {
+    const total = Math.ceil(this.filteredProducts().length / this.pageSize());
+    return Math.max(1, total);
+  });
+
   readonly visibleProducts = computed<FinancialProduct[]>(() => {
-    return this.filteredProducts().slice(0, this.pageSize());
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredProducts().slice(start, end);
   });
 
   readonly totalFilteredCount = computed<number>(
@@ -65,6 +80,19 @@ export class ProductsListComponent implements OnInit {
   readonly isDeleting = signal<boolean>(false);
   readonly selectedToDelete = signal<FinancialProduct | null>(null);
 
+  constructor() {
+    effect(
+      () => {
+        const total = this.totalPages();
+        const current = this.currentPage();
+        if (current > total) {
+          this.currentPage.set(total);
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
+
   ngOnInit(): void {
     this.loadProducts();
 
@@ -72,10 +100,12 @@ export class ProductsListComponent implements OnInit {
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((value) => {
         this.searchTerm.set(value);
+        this.currentPage.set(1);
       });
 
     this.pageSizeControl.valueChanges.subscribe((value) => {
       this.pageSize.set(value);
+      this.currentPage.set(1);
     });
   }
 
@@ -100,7 +130,10 @@ export class ProductsListComponent implements OnInit {
   }
 
   onEdit(productId: string): void {
-    this._router.navigate(['/products', productId, 'edit']);
+    const product = this.products().find((p) => p.id === productId);
+    this._router.navigate(['/products', productId, 'edit'], {
+      state: product ? { product } : undefined,
+    });
   }
 
   onDelete(productId: string): void {
@@ -135,6 +168,18 @@ export class ProductsListComponent implements OnInit {
       },
     });
   }
+
+  nextPage(): void {
+    const next = this.currentPage() + 1;
+    if (next <= this.totalPages()) {
+      this.currentPage.set(next);
+    }
+  }
+
+  prevPage(): void {
+    const prev = this.currentPage() - 1;
+    if (prev >= 1) {
+      this.currentPage.set(prev);
+    }
+  }
 }
-
-

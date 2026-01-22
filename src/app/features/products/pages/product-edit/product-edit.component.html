@@ -1,3 +1,25 @@
-<p>product-edit works!</p>
+<section class="page">
+  <header class="page__header">
+    <h1 class="title">Editar producto</h1>
+
+    <button class="btn btn--ghost" type="button" (click)="cancel()">
+      Volver
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state state--loading">Cargando producto...</div>
+  } @else {
+    <app-product-form
+      [form]="form"
+      [isSaving]="isSaving()"
+      [canSubmit]="canSubmit()"
+      [error]="error()"
+      submitLabel="Guardar"
+      (submitForm)="submit()"
+      (resetForm)="reset()"
+    ></app-product-form>
+  }
+</section>
 
 

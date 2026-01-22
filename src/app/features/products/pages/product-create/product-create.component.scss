@@ -22,4 +22,30 @@
   line-height: 1.2;
 }
 
+.btn {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  background: #f3f4f6;
+  color: #111827;
+  transition:
+    transform 80ms ease,
+    filter 140ms ease,
+    background 140ms ease;
+}
 
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: #d1d5db;
+}
+
+.btn--ghost:hover {
+  background: #f9fafb;
+}

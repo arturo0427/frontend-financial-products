@@ -25,6 +25,14 @@ export class ProductsService {
       .pipe(map((res) => res.data));
   }
 
+  getById(id: string): Observable<FinancialProduct> {
+    return this._http
+      .get<ApiEntityResponse<FinancialProduct>>(
+        `${API.baseUrl}${API.productById(id)}`,
+      )
+      .pipe(map((res) => res.data));
+  }
+
   create(payload: CreateFinancialProductPayload): Observable<FinancialProduct> {
     return this._http
       .post<

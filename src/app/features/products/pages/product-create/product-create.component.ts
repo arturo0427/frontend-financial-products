@@ -1,20 +1,19 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { Component, computed, inject, signal, DestroyRef } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, distinctUntilChanged, first, map, of } from 'rxjs';
 
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { mapHttpErrorToUi } from '../../../../core/helpers/http-error.helper';
 import { UiHttpError } from '../../../../core/interfaces/http-error.interface';
 import { CreateFinancialProductPayload } from '../../../../core/interfaces/products-payloads.interface';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductFormComponent } from '../../../../shared/components/forms/product-form/product-form.component';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  addOneYearIso,
+  releaseDateNotPastValidator,
+  revisionOneYearAfterValidator,
+} from '../../../../core/helpers/product-form-validators';
 
 type ProductCreateForm = FormGroup<{
   id: FormControl<string>;
@@ -35,6 +34,7 @@ type ProductCreateForm = FormGroup<{
 export class ProductCreateComponent {
   private readonly _productsService = inject(ProductsService);
   private readonly _router = inject(Router);
+  private readonly _destroyRef = inject(DestroyRef);
 
   readonly isSaving = signal<boolean>(false);
   readonly error = signal<UiHttpError | null>(null);
@@ -75,16 +75,13 @@ export class ProductCreateComponent {
         nonNullable: true,
         validators: [
           Validators.required,
-          this.releaseDateNotPastValidator.bind(this),
+          releaseDateNotPastValidator,
         ],
       }),
       date_revision: new FormControl<string>('', {
         nonNullable: true,
-        validators: [Validators.required],
+        validators: [Validators.required, revisionOneYearAfterValidator],
       }),
-    },
-    {
-      validators: [this.revisionExactlyOneYearValidator.bind(this)],
     },
   );
 
@@ -98,55 +95,18 @@ export class ProductCreateComponent {
 
   ngOnInit(): void {
     this.form.controls.date_release.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this._destroyRef))
       .subscribe((release: string) => {
-        const nextRevision = release ? this.addOneYearIso(release) : '';
+        const nextRevision = release ? addOneYearIso(release) : '';
 
         this.form.controls.date_revision.setValue(nextRevision, {
           emitEvent: false,
         });
 
-        this.form.updateValueAndValidity({ emitEvent: true });
+        this.form.controls.date_revision.updateValueAndValidity({
+          emitEvent: true,
+        });
       });
-  }
-
-  private releaseDateNotPastValidator(
-    control: AbstractControl<string>,
-  ): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-
-    return value >= this.todayLocalIso() ? null : { dateInPast: true };
-  }
-
-  private revisionExactlyOneYearValidator(
-    group: AbstractControl,
-  ): ValidationErrors | null {
-    const release = group.get('date_release')?.value as string | null;
-    const revision = group.get('date_revision')?.value as string | null;
-
-    if (!release || !revision) return null;
-
-    const expected = this.addOneYearIso(release);
-
-    if (revision !== expected) {
-
-      const revisionControl = group.get('date_revision');
-      const current = revisionControl?.errors ?? {};
-      revisionControl?.setErrors({ ...current, notOneYearAfter: true });
-
-      return { notOneYearAfter: true };
-    }
-
-    const revisionControl = group.get('date_revision');
-    const errs = revisionControl?.errors;
-
-    if (errs && 'notOneYearAfter' in errs) {
-      const { notOneYearAfter, ...rest } = errs;
-      revisionControl?.setErrors(Object.keys(rest).length ? rest : null);
-    }
-
-    return null;
   }
 
   private uniqueIdValidator(control: AbstractControl<string>) {
@@ -159,9 +119,6 @@ export class ProductCreateComponent {
       first(),
     );
   }
-
-
-
 
   submit(): void {
     this.form.markAllAsTouched();
@@ -201,7 +158,6 @@ export class ProductCreateComponent {
       date_release: '',
       date_revision: '',
     });
-
     this.form.updateValueAndValidity({ emitEvent: true });
   }
 
@@ -209,25 +165,4 @@ export class ProductCreateComponent {
     this._router.navigate(['/products']);
   }
 
-
-
-
-  private todayLocalIso(): string {
-    const d = new Date();
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().slice(0, 10);
-  }
-
-  private addOneYearIso(isoDate: string): string {
-    const [y, m, d] = isoDate.split('-').map((v) => Number(v));
-    const date = new Date(y, m - 1, d);
-    date.setFullYear(date.getFullYear() + 1);
-
-    const yy = String(date.getFullYear());
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${yy}-${mm}-${dd}`;
-  }
 }
-
-

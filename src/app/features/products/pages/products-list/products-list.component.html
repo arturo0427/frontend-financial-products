@@ -44,6 +44,28 @@
         <div class="table__footer">
           <div class="results">{{ totalFilteredCount() }} Resultados</div>
 
+          <div class="pagination">
+            <button
+              class="btn btn--ghost"
+              type="button"
+              (click)="prevPage()"
+              [disabled]="currentPage() === 1"
+            >
+              Anterior
+            </button>
+            <div class="pagination__status">
+              Pagina {{ currentPage() }} de {{ totalPages() }}
+            </div>
+            <button
+              class="btn btn--ghost"
+              type="button"
+              (click)="nextPage()"
+              [disabled]="currentPage() === totalPages()"
+            >
+              Siguiente
+            </button>
+          </div>
+
           <div class="field field--small footer__size">
             <label class="label" for="pageSize">Mostrar</label>
             <select
