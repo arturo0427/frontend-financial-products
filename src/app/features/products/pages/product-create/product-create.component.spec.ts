@@ -65,7 +65,6 @@ describe('ProductCreateComponent', () => {
     idCtrl.markAsPending();
     idCtrl.updateValueAndValidity();
 
-    // Para disparar async validator con updateOn blur, forzamos "blur" en el input real:
     const input: HTMLInputElement = fixture.nativeElement.querySelector('#id');
     input.value = 'abc';
     input.dispatchEvent(new Event('input'));
@@ -166,3 +165,4 @@ describe('ProductCreateComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/products']);
   });
 });
+

@@ -1,4 +1,4 @@
-// products.service.spec.ts
+
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -209,3 +209,4 @@ describe('ProductsService', () => {
     });
   });
 });
+

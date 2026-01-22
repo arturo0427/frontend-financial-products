@@ -76,7 +76,7 @@ describe('ProductEditComponent', () => {
     const originalState = history.state;
 
     try {
-      // Simula state
+
       history.replaceState({ product: productMock }, '');
 
       fixture = TestBed.createComponent(ProductEditComponent);
@@ -188,3 +188,4 @@ describe('ProductEditComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/products']);
   });
 });
+
