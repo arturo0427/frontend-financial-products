@@ -60,4 +60,12 @@
       }
     }
   </div>
+
+  <app-confirm-delete-modal
+    [isOpen]="isDeleteOpen()"
+    [isBusy]="isDeleting()"
+    [productName]="selectedToDelete()?.name ?? ''"
+    (cancel)="closeDeleteModal()"
+    (confirm)="confirmDelete()"
+  />
 </section>

@@ -1,0 +1,42 @@
+@if (isOpen) {
+  <div class="backdrop" (click)="onBackdropClick()">
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 class="modal__title">Confirmar eliminación</h2>
+
+      <p class="modal__text">
+        ¿Estás seguro de eliminar el producto
+        <strong>{{ productName }}</strong
+        >?
+      </p>
+
+      <div class="modal__actions">
+        <button
+          class="btn btn--ghost"
+          type="button"
+          (click)="onCancel()"
+          [disabled]="isBusy"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="btn btn--primary"
+          type="button"
+          (click)="onConfirm()"
+          [disabled]="isBusy"
+        >
+          @if (isBusy) {
+            Eliminando...
+          } @else {
+            Eliminar
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

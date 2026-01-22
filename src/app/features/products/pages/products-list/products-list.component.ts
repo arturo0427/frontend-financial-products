@@ -1,24 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { mapHttpErrorToUi } from '../../../../core/helpers/http-error.helper';
 import { FinancialProduct } from '../../../../core/interfaces/financial-product.interface';
 import { UiHttpError } from '../../../../core/interfaces/http-error.interface';
 import { ProductsService } from '../../../../core/services/products.service';
 import { TableComponent } from '../../../../shared/components/table/table.component';
-
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ConfirmDeleteModalComponent } from './../../../../shared/components/modals/confirm-delete-modal/confirm-delete-modal.component';
 
 type PageSizeOption = 5 | 10 | 20;
 
 @Component({
   selector: 'app-products-list',
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TableComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    TableComponent,
+    ConfirmDeleteModalComponent,
+  ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss',
 })
-export class ProductsListComponent {
+export class ProductsListComponent implements OnInit {
   private readonly _productsService = inject(ProductsService);
   private readonly _router = inject(Router);
 
@@ -54,6 +60,10 @@ export class ProductsListComponent {
   readonly pageSizeControl = new FormControl<PageSizeOption>(5, {
     nonNullable: true,
   });
+
+  readonly isDeleteOpen = signal<boolean>(false);
+  readonly isDeleting = signal<boolean>(false);
+  readonly selectedToDelete = signal<FinancialProduct | null>(null);
 
   ngOnInit(): void {
     this.loadProducts();
@@ -94,8 +104,35 @@ export class ProductsListComponent {
   }
 
   onDelete(productId: string): void {
-    // aquí irá el modal D4
-    // por ahora dejamos el hook preparado
-    console.log('delete', productId);
+    const product = this.products().find((p) => p.id === productId) ?? null;
+    this.selectedToDelete.set(product);
+    this.isDeleteOpen.set(true);
+  }
+
+  closeDeleteModal(): void {
+    if (this.isDeleting()) return;
+    this.isDeleteOpen.set(false);
+    this.selectedToDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const product = this.selectedToDelete();
+    if (!product) return;
+
+    this.isDeleting.set(true);
+
+    this._productsService.remove(product.id).subscribe({
+      next: () => {
+        this.products.set(this.products().filter((p) => p.id !== product.id));
+
+        this.isDeleting.set(false);
+        this.closeDeleteModal();
+      },
+      error: (err: unknown) => {
+        this.error.set(mapHttpErrorToUi(err));
+        this.isDeleting.set(false);
+        this.closeDeleteModal();
+      },
+    });
   }
 }
