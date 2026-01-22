@@ -14,8 +14,7 @@
           id="search"
           class="input"
           type="text"
-          [value]="searchTerm()"
-          (input)="onSearchChange($any($event.target).value)"
+          [formControl]="searchControl"
           placeholder="Escribe para buscar..."
           autocomplete="off"
         />
@@ -50,12 +49,11 @@
             <select
               id="pageSize"
               class="select"
-              [value]="pageSize()"
-              (change)="onPageSizeChange($any($event.target).value)"
+              [formControl]="pageSizeControl"
             >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
+              <option [ngValue]="5">5</option>
+              <option [ngValue]="10">10</option>
+              <option [ngValue]="20">20</option>
             </select>
           </div>
         </div>

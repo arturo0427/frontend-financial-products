@@ -7,11 +7,14 @@ import { UiHttpError } from '../../../../core/interfaces/http-error.interface';
 import { ProductsService } from '../../../../core/services/products.service';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+
 type PageSizeOption = 5 | 10 | 20;
 
 @Component({
   selector: 'app-products-list',
-  imports: [CommonModule, RouterModule, TableComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TableComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss',
 })
@@ -47,8 +50,23 @@ export class ProductsListComponent {
     () => this.filteredProducts().length,
   );
 
+  readonly searchControl = new FormControl<string>('', { nonNullable: true });
+  readonly pageSizeControl = new FormControl<PageSizeOption>(5, {
+    nonNullable: true,
+  });
+
   ngOnInit(): void {
     this.loadProducts();
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.searchTerm.set(value);
+      });
+
+    this.pageSizeControl.valueChanges.subscribe((value) => {
+      this.pageSize.set(value);
+    });
   }
 
   loadProducts(): void {
@@ -65,17 +83,6 @@ export class ProductsListComponent {
         this.isLoading.set(false);
       },
     });
-  }
-
-  onSearchChange(value: string): void {
-    this.searchTerm.set(value);
-  }
-
-  onPageSizeChange(value: string): void {
-    const parsed = Number(value);
-    if (parsed === 5 || parsed === 10 || parsed === 20) {
-      this.pageSize.set(parsed);
-    }
   }
 
   goToCreate(): void {
