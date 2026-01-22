@@ -47,17 +47,51 @@
       <div class="mono">{{ item.date_revision }}</div>
 
       <div class="actions">
-        <button class="btn btn--link" type="button" (click)="onEdit(item.id)">
-          Editar
-        </button>
         <button
-          class="btn btn--link danger"
+          class="action-toggle"
           type="button"
-          (click)="onRemove(item.id)"
+          (click)="toggleMenu($event, item.id)"
+          [attr.aria-expanded]="menuOpenFor === item.id"
+          aria-haspopup="menu"
+          aria-controls="table-actions-menu"
+          aria-label="Acciones"
         >
-          Eliminar
+          <span class="action-toggle__dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span class="sr-only">Acciones</span>
         </button>
       </div>
+    </div>
+  }
+
+  @if (menuOpenFor && menuPosition) {
+    <div
+      id="table-actions-menu"
+      class="dropdown dropdown--floating"
+      role="menu"
+      [style.top.px]="menuPosition.top"
+      [style.left.px]="menuPosition.left"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        role="menuitem"
+        class="dropdown__item"
+        (click)="onEdit(menuOpenFor)"
+      >
+        Editar
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        class="dropdown__item dropdown__item--danger"
+        (click)="onRemove(menuOpenFor)"
+      >
+        Eliminar
+      </button>
     </div>
   }
 </div>
